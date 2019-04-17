@@ -46,6 +46,7 @@ def server():
         data, addr = s.recvfrom(BUFSIZE)
         #print(addr)
         IPaddress, Trash = addr
+		data = str.decode(data)
         IPThing = [int(x) for x in IPaddress.split(".")]
         if IPThing not in IPMemory:
             IPMemory.append(IPThing)
@@ -59,6 +60,7 @@ def server():
         #print(IPMemory)
         print( 'server received messages from %d computers in %f seconds' % (computers, totTime))
         data += "||" + str(computers) + "||" + str(totTime)
+		data = str.encode(data)
         s.sendto(data, addr)
 
 def client():
@@ -77,8 +79,10 @@ def client():
         line = sys.stdin.readline()
         if not line:
             break
+		line = str.encode(line)
         s.sendto(line, addr)
         data, fromaddr = s.recvfrom(BUFSIZE)
+		data = str.decode(data)
         data2 = data.split("||")
         computers = int(data2[1])
         time = float(data2[2])
