@@ -26,8 +26,8 @@ def main():
 
 def usage():
     sys.stdout = sys.stderr
-    print( 'Usage: udpecho -s [port]            (server)')
-    print( 'or:    udpecho -c [host IP address] [port] <file (client)')
+    print('Usage: udpecho -s [port]            (server)')
+    print('or:    udpecho -c [host IP address] [port] <file (client)')
     sys.exit(2)
 
 def server():
@@ -38,12 +38,13 @@ def server():
         port = ECHO_PORT
     s = socket(AF_INET, SOCK_DGRAM)
     s.bind(('', port))
-    print( 'udp echo server ready')
+    print('udp echo server ready')
     computers = 0
     now = time.time()
     future = now + 60
     while 1:
         data, addr = s.recvfrom(BUFSIZE)
+        data = str.decode(data)
         #print(addr)
         IPaddress, Trash = addr
 		data = str.decode(data)
@@ -58,7 +59,7 @@ def server():
             now = time.time()
             future = now + 60
         #print(IPMemory)
-        print( 'server received messages from %d computers in %f seconds' % (computers, totTime))
+        print('server received messages from %d computers in %f seconds' % (computers, totTime))
         data += "||" + str(computers) + "||" + str(totTime)
 		data = str.encode(data)
         s.sendto(data, addr)
@@ -86,6 +87,6 @@ def client():
         data2 = data.split("||")
         computers = int(data2[1])
         time = float(data2[2])
-        print( 'client received messages from %d computers in %f seconds' % (computers, time))
+        print('client received messages from %d computers in %f seconds' % (computers, time))
 
 main()
